@@ -4,7 +4,7 @@
 [![API](https://img.shields.io/badge/API-26%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=26)
 [![made-with-kotlin](https://img.shields.io/badge/Made%20with-Kotlin-17216E.svg)](https://kotlinlang.org/)
 
-An Android app to relay Google Maps navigation notifications to smartwatches and other wearables that don't receive them natively.
+An Android app to relay Google Maps navigation notifications to smartwatches and other wearables that don't receive them natively. This is a fork that fixes the app and add several quaily of life improvements to the notification relaying experience... or so i hope :)
 
 
 ## The Problem
@@ -59,31 +59,12 @@ The app needs three permissions to function correctly. It will guide you through
 2.  Open the app (let it run in background).
 3.  Lock your phone and enjoy getting directions on your wrist!
 
----
-
-## Setup for Developers (Building from Source)
-
-If you want to modify the code or build the app yourself, follow these steps.
-
-#### Prerequisites
--   Intellij IDEA IDE with gradle setup or [Android Studio](https://developer.android.com/studio) (latest stable version recommended).
--   An Android device or emulator running API 26 (Android 8.0) or higher.
-
-#### Building
-1.  **Clone the repository:**
-    ```sh
-    https://github.com/Malaysanghvi17/maps-notification-forwarder.git
-    ```
-2.  **Open in Android Studio:**
-    -   Launch Android Studio.
-    -   Select `File > Open` and navigate to the cloned project directory.
-3.  **Sync Gradle:**
-    -   Let Intellij Idea download all the necessary dependencies.
-4.  **Build and Run:**
-    -   Go to Build -> Build App Bundle(APKs).
-
 ### Technical Overview
 
 -   **`NotificationListenerService`**: The core of the app. `MapsNotificationListener.kt` extends this service to gain access to the notification stream and filter for Google Maps updates.
 -   **`Foreground Service`**: To ensure the `NotificationListenerService` is not killed by the Android system when the app is in the background, it promotes itself to a foreground service, displaying a persistent notification.
 -   **`BroadcastReceiver`**: The service communicates with the `MainActivity` (the UI) by sending broadcasts. This allows the UI to display logs of the notifications being relayed.
+
+### Note
+- Tested on Android Emulator running Android 14
+- Tested on Xiaomi POCO F6 with Advan On Posh wearable using the default watch app.
