@@ -4,6 +4,7 @@ package com.example.mapsnotify
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            updateUi()
+            // The UI will be updated in onResume
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,11 @@ class MainActivity : AppCompatActivity() {
         setupNotificationChannel()
         askNotificationPermission()
         setupReceiver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Check for permission every time the app is brought to the foreground
         updateUi()
     }
 
@@ -76,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             if (isNotificationListenerEnabled()) {
                 toggleMonitoring()
             } else {
+                // If permission is revoked, guide the user to re-grant it
                 requestNotificationListenerPermission()
             }
         }
@@ -110,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         val intentFilter = IntentFilter("com.example.mapsnotify.NOTIFICATION_LISTENER")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(notificationReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+            registerReceiver(notificationReceiver, intentFilter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(notificationReceiver, intentFilter)
         }
@@ -135,13 +142,14 @@ class MainActivity : AppCompatActivity() {
             contentResolver,
             "enabled_notification_listeners"
         )
-        return enabledListeners?.contains(componentName.flattenToString()) ?: false
+        val serviceComponentName = ComponentName(this, MapsNotificationListener::class.java)
+        return enabledListeners?.contains(serviceComponentName.flattenToString()) ?: false
     }
 
     private fun requestNotificationListenerPermission() {
         AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog)
             .setTitle("🔐 Permission Required")
-            .setMessage("To relay Maps notifications to your watch, enable 'Maps Notify' in Notification Access settings.")
+            .setMessage("This app requires Notification Access to function. Due to your phone's security settings, you may need to re-grant this permission each time you start the app.")
             .setPositiveButton("Open Settings") { _, _ ->
                 val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
                 notificationPermissionLauncher.launch(intent)
