@@ -68,3 +68,11 @@ The app needs three permissions to function correctly. It will guide you through
 ### Note
 - Tested on Android Emulator running Android 14
 - Tested on Xiaomi POCO F6 with Advan On Posh wearable using the default watch app.
+- This build is hugely helped by AI (Gemini Agent)
+
+### Things to do
+- Change application name
+- Add application logo
+- Add feature to customize the relayed message
+- Add relaying behavior customizer
+- Add app skin
